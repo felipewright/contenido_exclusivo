@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 export default function HomeContent() {
@@ -30,12 +30,10 @@ export default function HomeContent() {
     { id: "video20", name: "Ampi & Turquesa" },
   ];
 
-  const [videos, setVideos] = useState(baseVideos);
-
-  useEffect(() => {
-    const shuffled = [...baseVideos].sort(() => Math.random() - 0.5);
-    setVideos(shuffled);
-  }, []);
+  // ✅ shuffle ONLY once (fix double randomization)
+  const [videos] = useState(() => {
+    return [...baseVideos].sort(() => Math.random() - 0.5);
+  });
 
   return (
     <div
@@ -94,7 +92,7 @@ export default function HomeContent() {
             }}
           >
             <img
-              src={`/images/${video.id}.jpg`}
+              src={`/images/${video.id}_result.webp`}
               style={{
                 width: "70px",
                 height: "70px",
@@ -108,7 +106,7 @@ export default function HomeContent() {
               <div style={{ fontWeight: "bold", fontSize: "18px" }}>
                 {video.name}
               </div>
-              <div style={{ fontSize: "12px", opacity: 0.8 }}>
+              <div style={{ fontSize: "12px", opacity: 0.7 }}>
                 Video exclusivo
               </div>
             </div>

@@ -81,6 +81,11 @@ export default function WatchPage(props: WatchPageProps) {
           controls
           preload="metadata"
           onEnded={handleEnd}
+          style={{
+            width: "100%",
+            maxWidth: "900px",
+            borderRadius: "12px",
+          }}
         />
       )}
     </div>
