@@ -108,7 +108,7 @@ export default function HomeContent() {
               <div style={{ fontWeight: "bold", fontSize: "18px" }}>
                 {video.name}
               </div>
-              <div style={{ fontSize: "12px", opacity: 0.7 }}>
+              <div style={{ fontSize: "12px", opacity: 0.8 }}>
                 Video exclusivo
               </div>
             </div>
