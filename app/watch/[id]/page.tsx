@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { use } from "react";
+import { useEffect, useState, use } from "react";
 import { useSearchParams } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 
@@ -23,7 +22,9 @@ export default function WatchPage(props: WatchPageProps) {
     const selected = localStorage.getItem(
       `selected_video_${eventId}`
     );
-    const watched = localStorage.getItem(`watched_${eventId}`);
+    const watched = localStorage.getItem(
+      `watched_${eventId}`
+    );
 
     if (!selected || selected !== params.id || watched) {
       setValid(false);
@@ -33,6 +34,9 @@ export default function WatchPage(props: WatchPageProps) {
 
     setValid(true);
 
+    // LOCK THE EVENT IMMEDIATELY
+    localStorage.setItem(`watched_${eventId}`, "true");
+
     const { data } = supabase.storage
       .from("videos")
       .getPublicUrl(`${params.id}.mp4`);
@@ -41,9 +45,32 @@ export default function WatchPage(props: WatchPageProps) {
     setLoading(false);
   }, [params.id, eventId]);
 
+  useEffect(() => {
+    const handlePopState = () => {
+      window.location.replace("/used");
+    };
+
+    window.history.pushState(
+      null,
+      "",
+      window.location.href
+    );
+
+    window.addEventListener(
+      "popstate",
+      handlePopState
+    );
+
+    return () => {
+      window.removeEventListener(
+        "popstate",
+        handlePopState
+      );
+    };
+  }, []);
+
   const handleEnd = () => {
-    localStorage.setItem(`watched_${eventId}`, "true");
-    window.location.href = "/used";
+    window.location.replace("/used");
   };
 
   if (loading) {
@@ -63,7 +90,22 @@ export default function WatchPage(props: WatchPageProps) {
     );
   }
 
-  if (!valid) return <div>Access denied</div>;
+  if (!valid) {
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "black",
+          color: "white",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        Access denied
+      </div>
+    );
+  }
 
   return (
     <div
