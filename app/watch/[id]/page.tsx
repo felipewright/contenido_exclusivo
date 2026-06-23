@@ -2,7 +2,6 @@
 
 import { useEffect, useState, use } from "react";
 import { useSearchParams } from "next/navigation";
-import { supabase } from "@/lib/supabaseClient";
 
 interface WatchPageProps {
   params: Promise<{ id: string }>;
@@ -37,11 +36,8 @@ export default function WatchPage(props: WatchPageProps) {
     // LOCK THE EVENT IMMEDIATELY
     localStorage.setItem(`watched_${eventId}`, "true");
 
-    const { data } = supabase.storage
-      .from("videos")
-      .getPublicUrl(`${params.id}.mp4`);
+    setVideoUrl(`https://pub-1d5f1342dd8c4e33a19a5d53b1e45df8.r2.dev/${params.id}.mp4`);
 
-    setVideoUrl(data.publicUrl);
     setLoading(false);
   }, [params.id, eventId]);
 
